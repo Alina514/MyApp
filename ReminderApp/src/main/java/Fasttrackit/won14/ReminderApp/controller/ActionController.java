@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 @RestController
+@RequestMapping("actions")    
 public class ActionController {
     @Autowired
     private ActionService actionService;
