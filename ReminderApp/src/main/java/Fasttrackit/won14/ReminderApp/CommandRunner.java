@@ -1,47 +1,45 @@
 package Fasttrackit.won14.ReminderApp;
 
-import Fasttrackit.won14.ReminderApp.model.Action;
-import Fasttrackit.won14.ReminderApp.model.Birthday;
-import Fasttrackit.won14.ReminderApp.model.Event;
-import Fasttrackit.won14.ReminderApp.repository.ActionRepository;
-import Fasttrackit.won14.ReminderApp.repository.BirthdayRepository;
-import Fasttrackit.won14.ReminderApp.repository.EventRepository;
+import Fasttrackit.won14.ReminderApp.model.Reminder;
+import Fasttrackit.won14.ReminderApp.repository.ReminderRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 
 @Component
+@RequestMapping("/reminders")
+@Slf4j
+@RequiredArgsConstructor
 public class CommandRunner implements CommandLineRunner {
-
-    private final EventRepository eventRepository;
-    private final ActionRepository actionRepository;
-    private final BirthdayRepository birthdayRepository;
-
-    public CommandRunner(EventRepository eventRepository, ActionRepository actionRepository, BirthdayRepository birthdayRepository) {
-        this.eventRepository = eventRepository;
-        this.actionRepository = actionRepository;
-        this.birthdayRepository = birthdayRepository;
-    }
+    private final ReminderRepository repository;
 
     @Override
-    public void run(String... args) throws Exception {
-        Action action1 = Action.builder().actionName("Complete report").build();
-        Action action2 = Action.builder().actionName("Send email").build();
-
-        actionRepository.saveAll(Arrays.asList(action1, action2));
-
-        Birthday birthday1 = Birthday.builder().personName("Mihai").birthDate(LocalDate.of(1990, 5, 15)).build();
-        Birthday birthday2 = Birthday.builder().personName("Andrei").birthDate(LocalDate.of(1985, 10, 20)).build();
-
-        birthdayRepository.saveAll(Arrays.asList(birthday1, birthday2));
-
-        Event event1 = Event.builder().eventName("Meeting").eventDateTime(LocalDateTime.now()).build();
-        Event event2 = Event.builder().eventName("Conference").eventDateTime(LocalDateTime.now().plusDays(1)).build();
-
-        eventRepository.saveAll(Arrays.asList(event1, event2));
+    public void run(String... args) {
+        log.info("Runner is populating with data");
+        repository.saveAll(List.of(
+                Reminder.builder()
+                        .id(1953926363L)
+                        .type("actions")
+                        .description("Meeting")
+                        .date("24.09.2024")
+                        .build(),
+                Reminder.builder()
+                        .id(86464563L)
+                        .type("birthdays")
+                        .description("Mum's birthday")
+                        .date("04.03.2025")
+                        .build(),
+                Reminder.builder()
+                        .id(8645976766L)
+                        .type("events")
+                        .description("Job's interview")
+                        .date("03.10.2024")
+                        .build()
+        ));
     }
 }
